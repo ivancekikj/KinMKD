@@ -1,0 +1,23 @@
+<th:block xmlns:th="http://www.thymeleaf.org">
+  <section class="who_section layout_padding" style="margin-top: 7%;margin-bottom: 2%">
+    <div class="container">
+      <div class="login form">
+        <header>Login</header>
+        <form th:action="@{/account/login}" th:method="POST">
+          <th:block th:if="${hasError}">
+            <p style="color: red" th:text="${error}"></p>
+          </th:block>
+          <input type="email" placeholder="Enter your email" required name="username">
+          <input type="password" placeholder="Enter your password" required name="password">
+          <input type="submit" class="button" value="Login">
+        </form>
+        <div class="signup">
+        <span class="signup">Don't have an account?
+         <a th:href="@{/account/register}"><label>Signup</label></a>
+        </span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</th:block>

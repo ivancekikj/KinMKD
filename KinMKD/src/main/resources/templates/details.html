@@ -1,0 +1,45 @@
+<th:block xmlns:th="http://www.thymeleaf.org">
+    <section class="who_section layout_padding" style="margin-top: 7%;margin-bottom: 2%">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="img-box">
+                        <iframe th:src="('https://www.openstreetmap.org/export/embed.html?bbox='+${location.lon}+'%2C'+${location.lat}+'%2C'+${location.lon}+'%2C'+${location.lat}+'&amp;layer=mapnik&amp;marker='+${location.lat}+'%2C'+${location.lon})" width="450" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="detail-box">
+                        <div class="heading_container">
+                            <h2 th:text="${location.name}"></h2>
+                            <h4 th:text="('Category: '+${location.categoryId.name()})"></h4>
+                        </div>
+                       <div>
+                           <div class="container">
+                               <th:block th:if="${!location.reviews.isEmpty()}" th:each="review : ${location.reviews}">
+                                   <div class="d-flex py-2">
+                                       <div class="second py-2 px-2"> <span class="text1" th:text="${review.comment}"></span>
+                                           <div class="d-flex justify-content-between py-1 pt-2">
+                                               <div><img src="https://www.nicepng.com/png/full/128-1280406_view-user-icon-png-user-circle-icon-png.png" width="18"><span class="text2" th:text="${review.user.email}"></span></div>
+                                               <div><span class="thumbup"><i class="fa fa-thumbs-o-up"></i></span><span class="text4" th:text="('Оцена: ' + ${review.rating})"></span></div>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </th:block>
+                               <th:block th:if="${location.reviews.isEmpty()}">
+                                   <p>No reviews available.</p>
+                               </th:block>
+                           </div>
+                    </div>
+                        <th:block sec:authorize="isAuthenticated()">
+                            <div>
+                                <a th:href="('/location/'+${location.id}+'/my-review')">
+                                    My Review
+                                </a>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
