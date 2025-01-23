@@ -1,10 +1,15 @@
 package mk.com.kinmkd.kinmkd.repository;
 
 import mk.com.kinmkd.kinmkd.model.Review;
-import org.springframework.data.jpa.repository.JpaRepository;
+import mk.com.kinmkd.kinmkd.model.dto.ReviewDto;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface ReviewRepository extends JpaRepository<Review,Integer> {
-     Optional<Review> findByUserIdAndLocationId(Integer userId, Integer locationId);
+public interface ReviewRepository {
+     Optional<Review> get(Integer locationId, Integer reviewId);
+     List<Review> getByLocationId(Integer locationId);
+     Review create(ReviewDto review);
+     void update(ReviewDto review);
+     void delete(Integer locationId, Integer reviewId);
 }

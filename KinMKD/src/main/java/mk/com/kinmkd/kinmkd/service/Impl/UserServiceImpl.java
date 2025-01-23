@@ -2,6 +2,7 @@ package mk.com.kinmkd.kinmkd.service.Impl;
 
 import lombok.AllArgsConstructor;
 import mk.com.kinmkd.kinmkd.model.User;
+import mk.com.kinmkd.kinmkd.model.dto.UserDto;
 import mk.com.kinmkd.kinmkd.model.exception.*;
 import mk.com.kinmkd.kinmkd.repository.UserRepository;
 import mk.com.kinmkd.kinmkd.service.UserService;
@@ -21,13 +22,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String email, String password, String repeatPassword) {
-
         validatePassword(password, repeatPassword);
-
         if (userRepository.findByEmail(email).isPresent()) {
             throw new EmailTakenException(email);
         }
-        User user = new User(email, passwordEncoder.encode(password));
+        UserDto user = new UserDto(email, passwordEncoder.encode(password));
         return userRepository.save(user);
     }
 

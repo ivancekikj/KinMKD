@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=KinMKD
+    ports:
+      - '5433:5432'
+    volumes:
+      - db:/var/lib/postgres
+
+  user_service_db:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=KinMKD_UsersDb
+    ports:
+      - '5434:5432'
+    volumes:
+      - db:/var/lib/user_service_db
+
+  user_service:
+    image: kinmkd-user-service
+    depends_on:
+      - user_service_db
+    build: ./KinMKD-UserService
+    restart: on-failure
+    ports:
+      - '8082:8080'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://user_service_db:5432/KinMKD_UsersDb
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    stdin_open: true
+    tty: true
+
+  front_end:
+    image: kinmkd
+    depends_on:
+      - postgres
+    build: ./KinMKD
+    restart: on-failure
+    ports:
+      - '6868:8080'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/KinMKD
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - USER_SERVICE_URL=http://user_service:8080
+    stdin_open: true
+    tty: true
+
+volumes:
+  db:

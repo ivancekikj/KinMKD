@@ -1,11 +1,14 @@
 package mk.com.kinmkd.kinmkd.repository;
 
 import mk.com.kinmkd.kinmkd.model.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+import mk.com.kinmkd.kinmkd.model.dto.UserDto;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User,Integer> {
-    Optional<User> findById(Integer id);
+public interface UserRepository {
     Optional<User> findByEmail(String email);
+    User save(UserDto userDto);
+    Map<Integer, String> getEmailsById(List<Integer> ids);
 }

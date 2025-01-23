@@ -1,0 +1,14 @@
+### Find user by email
+GET http://localhost:8081/api/users/john.doe@gmail.com
+
+### Register user
+POST http://localhost:8081/api/users
+Content-Type: application/json
+
+{
+  "email": "john.doe@gmail.com",
+  "password": "erglkjerjgergj"
+}
+
+### Map user IDs to emails
+GET http://localhost:8081/api/users/emails?ids=1,2,3

@@ -1,0 +1,33 @@
+### Filter reviews by location
+GET http://localhost:8083/api/reviews?locationId=1
+
+
+### Get specific review
+GET http://localhost:8083/api/reviews?locationId=1&userId=1
+
+
+### Create review
+POST http://localhost:8083/api/reviews
+Content-Type: application/json
+
+{
+  "locationId": 1,
+  "userId": 1,
+  "rating": 2,
+  "comment": "wejkfwjefje"
+}
+
+
+### Update review
+PUT http://localhost:8083/api/reviews
+Content-Type: application/json
+
+{
+  "locationId": 1,
+  "userId": 1,
+  "rating": 4,
+  "comment": "eee"
+}
+
+### Delete review
+DELETE http://localhost:8083/api/reviews?locationId=1&userId=1

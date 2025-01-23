@@ -1,0 +1,6 @@
+### Search locations
+GET http://localhost:8082/api/locations?category=MONUMENT&keyword=krste
+
+### Get a specific location
+
+GET http://localhost:8082/api/locations/4
