@@ -1,64 +1,111 @@
 version: "3.8"
 
 services:
-  postgres:
-    image: postgres
-    restart: unless-stopped
-    environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=KinMKD
-    ports:
-      - '5433:5432'
-    volumes:
-      - db:/var/lib/postgres
-
-  user_service_db:
+  user-service-db:
     image: postgres
     restart: unless-stopped
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=KinMKD_UsersDb
-    ports:
-      - '5434:5432'
     volumes:
-      - db:/var/lib/user_service_db
+      - user_db:/var/lib/postgresql/data
+    networks:
+      - app-network
 
-  user_service:
+  location-service-db:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=KinMKD_LocationsDb
+    volumes:
+      - location_db:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  review-service-db:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=KinMKD_ReviewsDb
+    volumes:
+      - review_db:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  user-service:
     image: kinmkd-user-service
     depends_on:
-      - user_service_db
+      - user-service-db
     build: ./KinMKD-UserService
     restart: on-failure
-    ports:
-      - '8082:8080'
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://user_service_db:5432/KinMKD_UsersDb
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://user-service-db:5432/KinMKD_UsersDb
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
-      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     stdin_open: true
     tty: true
+    networks:
+      - app-network
 
-  front_end:
-    image: kinmkd
+  review-service:
+    image: kinmkd-review-service
     depends_on:
-      - postgres
-    build: ./KinMKD
+      - review-service-db
+    build: ./KinMKD-ReviewService
     restart: on-failure
-    ports:
-      - '6868:8080'
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/KinMKD
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://review-service-db:5432/KinMKD_ReviewsDb
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
-      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - USER_SERVICE_URL=http://user_service:8080
     stdin_open: true
     tty: true
+    networks:
+      - app-network
+
+  location-service:
+    image: kinmkd-location-service
+    depends_on:
+      - location-service-db
+    build: ./KinMKD-LocationService
+    restart: on-failure
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://location-service-db:5432/KinMKD_LocationsDb
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+    stdin_open: true
+    tty: true
+    networks:
+      - app-network
+
+  front-end:
+    image: kinmkd-front-end
+    depends_on:
+      - user-service
+      - location-service
+      - review-service
+    build: ./KinMKD
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    environment:
+      - USER_SERVICE_URL=http://user-service:8081
+      - LOCATION_SERVICE_URL=http://location-service:8082
+      - REVIEW_SERVICE_URL=http://review-service:8083
+    stdin_open: true
+    tty: true
+    networks:
+      - app-network
 
 volumes:
-  db:
+  user_db:
+  location_db:
+  review_db:
+
+networks:
+  app-network:
+    driver: bridge
