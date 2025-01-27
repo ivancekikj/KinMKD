@@ -1,9 +1,9 @@
-<h1>Description</h1><hr>
+<h1>Description</h1>
 
 <p>KinMKD (Kulturno-istorisko nasledstvo Makedonija) is an interactive guide that allows users to easily find and explore various cultural and historical objects and locations in Macedonia. Users can search for objects by category and name and view detailed information about each object. Along with the ability to rate and leave comments, the application creates a shared community for lovers of the cultural and historical heritage of Macedonia.</p>
 <p>OpenStreetMap, which is open-source, is used for obtaining geolocation information about various cultural objects and historical locations in Macedonia.</p>
 
-<h1>Functionalities</h1><hr>
+<h1>Functionalities</h1>
 
 <ol>
     <li>The system should enable users to find cultural and historical objects on the territory of the state.</li>
@@ -21,7 +21,7 @@
     <li>The system should prevent users from creating and deleting comments and ratings when not logged into the system.</li>
 </ol>
 
-<h1>User Interface</h1><hr>
+<h1>User Interface</h1>
 
 <h2>Home Page</h2>
 <img src="./mockups/Home.png">
@@ -38,11 +38,11 @@
 <h2>Review Page</h2>
 <img src="./mockups/MyReview.png">
 
-<h1>Microservice Architecture</h1><hr>
+<h1>Microservice Architecture</h1>
 
 <img src="architecture/software-structure.jpg">
 
-<h1>Run The App</h1><hr>
+<h1>Run The App</h1>
 
 <h2>Locally</h2>
 <ol>
@@ -76,5 +76,5 @@
     </li>
 </ol>
 
-<h1>Original Repository</h1><hr>
+<h1>Original Repository</h1>
 <a href="https://github.com/dejan-simonovski/DIANS">Link</a>
